@@ -4,7 +4,7 @@
   "description": "basic natours api with nodejs, express and mongodb",
   "main": "app.js",
   "scripts": {
-    "start": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js&& node server.js",
+    "start": "node server.js&& parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
     "dev": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&& nodemon server.js",
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
