@@ -42,6 +42,7 @@ const sendErrorDev = (err, req, res) => {
   }
 
   // 2. Frontend
+  console.error(`ERROR 💥${err}`);
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong',
     msg: err.message,
@@ -60,7 +61,7 @@ const sendErrorProd = (err, req, res) => {
     }
     // B) Programming or other unknown errors: don't leak error details
     // 1. Log Error
-    console.log(`ERROR ${err}`);
+    console.error(`ERROR 💥${err}`);
     // 2. Send generic message
     return res.status(500).json({
       status: 'error',
@@ -77,7 +78,7 @@ const sendErrorProd = (err, req, res) => {
   }
   // B) Programming or other unknown errors: don't leak error details
   // 1. Log Error
-  console.error(`ERROR ${err}`);
+  console.error(`ERROR 💥${err}`);
   // 2. Send generic message
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong',
@@ -92,7 +93,6 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
-    console.log(err);
     let error = { ...err };
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateNameDB(error);

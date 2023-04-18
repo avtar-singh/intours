@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -88,6 +89,9 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+
+// Compress all text sent to client
+app.use(compression());
 
 // 2. Routes
 
