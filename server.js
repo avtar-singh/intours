@@ -11,9 +11,9 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: './config.env' });
 // ATLAS DB
-// const DB = process.env.DB_URL.replace('<PASSWORD>', process.env.DB_PASS);
+const DB = process.env.DB_URL.replace('<PASSWORD>', process.env.DB_PASS);
 // Local DB
-const DB = process.env.DB_LOCAL;
+// const DB = process.env.DB_LOCAL;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
