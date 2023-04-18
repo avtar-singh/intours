@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -25,6 +26,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // 1. Global Middlewares
 
+app.use(cors());
+
+app.options('*', cors());
 // SET Security HTTP Headers
 app.use(
   helmet({
