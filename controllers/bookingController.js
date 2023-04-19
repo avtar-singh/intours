@@ -1,4 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const User = require('../models/userModel');
 const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
@@ -11,11 +12,10 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
-    success_url: `${req.protocol}://${req.get('host')}/?tour=${
-      req.params.tourId
-    }&user=${req.user.id}&price=${tour.price}`,
+    success_url: `${req.protocol}://${req.get('host')}/my-tours`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
+    client_reference_id: req.params.tourId,
     line_items: [
       {
         price_data: {
@@ -38,13 +38,38 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createBookingCheckout = catchAsync(async (req, res, next) => {
-  const { tour, user, price } = req.query;
-  if (!tour && !user && !price) return next();
-
+// Make new Booking for User via Stripe Session
+const createBookingCheckout = async (session) => {
+  const tour = session.client_reference_id;
+  const user = (await User.find({ email: session.customer_email })).id;
+  const price = session.line_items[0].unit_amount / 100;
   await Booking.create({ tour, user, price });
-  res.redirect(req.originalUrl.split('?')[0]);
-});
+};
+
+// Stripe Webhook - Checkout Session Completed fn
+exports.webhookCheckout = (req, res, next) => {
+  // 1. Get STRIPE SIGNATURE
+  const signature = req.headers['stripe-signature'];
+  let event;
+  try {
+    // 2. CONSTRUCT EVENT
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SIGNATURE
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook error: ${err.message}`);
+  }
+
+  // 3. VERIFY EVENT
+  if (event.type === 'checkout.session.completed') {
+    // 4. CREATE BOOKING
+    createBookingCheckout(event.data.object);
+
+    res.status(200).json({ received: true });
+  }
+};
 
 exports.getBooking = factory.getOne(Booking);
 
