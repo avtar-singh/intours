@@ -21,12 +21,6 @@ const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout
-);
-
 // Set View Engine
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -49,6 +43,11 @@ app.use(
 //   return next();
 // });
 
+// Development Logs
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 // Limit Requests
 const limiter = rateLimit({
   max: 100,
@@ -59,10 +58,11 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-// Development Logs
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 // Body Parser
 app.use(express.json({ limit: '10kb' }));
