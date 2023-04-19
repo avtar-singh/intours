@@ -21,6 +21,12 @@ const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
+
 // Set View Engine
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -52,12 +58,6 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter);
-
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout
-);
 
 // Development Logs
 if (process.env.NODE_ENV === 'development') {
