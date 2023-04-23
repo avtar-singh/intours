@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import showAlert from './alerts';
+import { showAlert } from './alerts';
 
 const stripe = Stripe(
   'pk_test_51MxkdeSHesHCrXaumYtjHwkGxqHoMKjjwTcSJmDn7KasotusJ0xcxcc4EOAWg6hMzdxvEuOwNPBhkRcQCCfb8LfU00BFm97Ir9'
