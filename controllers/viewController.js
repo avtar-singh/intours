@@ -63,6 +63,11 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   const tourIds = bookings.map((el) => el.tour);
   const tours = await Tour.find({ _id: { $in: tourIds } });
 
+  if (tours.length === 0)
+    return next(
+      new AppError('No tours booked yet. Kindly book tours first.', 400)
+    );
+
   res.status(200).render('overview', {
     title: 'My tours',
     tours,
