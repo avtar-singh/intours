@@ -1,11 +1,11 @@
 /* eslint-disable */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { displayMap } from './mapbox';
-import { login, logout } from './login';
-import { updateUserSettings } from './updateSettings';
-import { bookTour } from './stripe';
-import { showAlert } from './alerts';
+import { displayMap } from './mapbox.js';
+import { login, logout } from './login.js';
+import { updateUserSettings } from './updateSettings.js';
+import { bookTour } from './stripe.js';
+import { showAlert } from './alerts.js';
 
 // DOM Elements
 const mapBox = document.getElementById('map');

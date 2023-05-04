@@ -1,12 +1,12 @@
 /* eslint-disable */
 import axios from 'axios';
-import showAlert from './alerts';
+import { showAlert } from './alerts.js';
 
 const stripe = Stripe(
   'pk_test_51MxkdeSHesHCrXaumYtjHwkGxqHoMKjjwTcSJmDn7KasotusJ0xcxcc4EOAWg6hMzdxvEuOwNPBhkRcQCCfb8LfU00BFm97Ir9'
 );
 
-export const bookTour = async (tourId) => {
+const bookTour = async (tourId) => {
   try {
     // 1. Get session from API
     const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
@@ -18,3 +18,5 @@ export const bookTour = async (tourId) => {
     showAlert('error', err);
   }
 };
+
+export { bookTour };

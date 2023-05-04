@@ -1,8 +1,8 @@
 /* eslint-disable */
 import axios from 'axios';
-import { showAlert } from './alerts';
+import { showAlert } from './alerts.js';
 
-export const updateUserSettings = async (data, type) => {
+const updateUserSettings = async (data, type) => {
   try {
     const url =
       type === 'password'
@@ -26,3 +26,5 @@ export const updateUserSettings = async (data, type) => {
     showAlert('error', err.response.data.message);
   }
 };
+
+export { updateUserSettings };

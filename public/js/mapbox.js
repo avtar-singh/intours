@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const displayMap = (locations) => {
+const displayMap = (locations) => {
   var map = new maplibregl.Map({
     container: 'map',
     style:
@@ -44,3 +44,5 @@ export const displayMap = (locations) => {
     },
   });
 };
+
+export { displayMap };
